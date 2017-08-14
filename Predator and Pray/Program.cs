@@ -30,9 +30,9 @@ namespace Predator_and_Prey
     {
         public static void SimulationWindow()
         {
-            Application PaP = new Application(new SFML.Window.VideoMode(800, 600), "Predator and Prey")
+            Application PaP = new Application(new SFML.Window.VideoMode(1600, 900), "Predator and Prey")
             {
-                SideSize = 4,
+                SideSize = 7,
                 PreyBreedHealth = 10,
                 PredatorBreedHealth = 100,
                 MaxHealth = 1000
@@ -41,17 +41,6 @@ namespace Predator_and_Prey
         }
         static void Main(string[] args)
         {
-            //Application PaP = new Application(new SFML.Window.VideoMode(800, 600), "Predator and Prey")
-            //{
-            //    SideSize = 4,
-            //    PreyBreedHealth = 10,
-            //    PredatorBreedHealth = 100,
-            //    MaxHealth = 1000
-            //};
-            //PaP.SetActive(false);
-            //Thread simulationWindow = new Thread(new ThreadStart(PaP.Run));
-            //simulationWindow.Start();
-
             Thread simulationWindow = new Thread(new ThreadStart(SimulationWindow));
             simulationWindow.Start();
             

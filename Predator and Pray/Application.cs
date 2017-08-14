@@ -14,6 +14,7 @@ namespace Predator_and_Prey
         public int PredatorBreedHealth { get; set; }
         public int SideSize { get; set; }
         Thread logic;
+        Creature[,] board;
 
         public List<Drawable> DrawableObjects { get; set; }
         public Application(VideoMode mode, string title) : base(mode, title)
@@ -30,7 +31,7 @@ namespace Predator_and_Prey
         {
             if (e.Code == Keyboard.Key.P)
             {
-                
+                GenerateRandomBoard();
             }
         }
 
@@ -38,7 +39,7 @@ namespace Predator_and_Prey
         {
             Close();
         }
-        private void GenerateRandomBoard(ref Creature[,] board)
+        private void GenerateRandomBoard()
         {
             Random rnd = new Random();
             for (int i = 0; i < board.GetLength(0); i++)
@@ -46,18 +47,18 @@ namespace Predator_and_Prey
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
                     int r = rnd.Next(100);
-                    if (r < 33)
+                    if (r < 50)
                         board[i, j] = null;
-                    else if (r < 50)
+                    else if (r < 70)
                         board[i, j] = new Predator(SideSize, 20, MaxHealth);
                     else
                         board[i, j] = new Prey(SideSize, 20, MaxHealth);
                 }
             }
         }
-        public void SimulationLogic(ref Creature[,] board, ref int predatorsMeter, ref int preysMeter, ref Random rnd, int tickWaitTimeInMs)
+        public void SimulationLogic( ref int predatorsMeter, ref int preysMeter, ref Random rnd, int tickWaitTimeInMs)
         {
-            while (true)
+            while (IsOpen)
             {
                 int predatorsMeterCount = 0;
                 int preysMeterCount = 0;
@@ -100,9 +101,8 @@ namespace Predator_and_Prey
         }
         public void Run()
         {
-            SetActive(true);
-            Creature[,] board = new Creature[Size.X / SideSize, Size.Y / SideSize];
-            GenerateRandomBoard(ref board);
+            board = new Creature[Size.X / SideSize, Size.Y / SideSize];
+            GenerateRandomBoard();
             Random rnd = new Random();
             Clock fpsmeter = new Clock();
             Font arialFont = new Font("arial.ttf");
@@ -112,29 +112,45 @@ namespace Predator_and_Prey
             Text preysMeterText = new Text("Preys: " + preysMeter.ToString(), arialFont, 30) { Position = new Vector2f(0, 32) };
             Text fpsMeterText = new Text("", arialFont, 20) { Position = new Vector2f(0, Size.Y - 21) };
 
-            logic = new Thread(() => SimulationLogic(ref board, ref predatorsMeter, ref preysMeter, ref rnd, 40));
+            Vertex[] v = new Vertex[4];
+
+            logic = new Thread(() => SimulationLogic(ref predatorsMeter, ref preysMeter, ref rnd, 40));
             logic.Start();
 
             while (IsOpen)
             {
                 DispatchEvents();
                 Clear();
-
-                RectangleShape cell = new RectangleShape(new Vector2f(SideSize, SideSize)) { OutlineColor = Color.Black, Position = new Vector2f(), OutlineThickness = 1 };
-                foreach (var item in board)
+                for (int i = 0; i < board.GetLength(0); i++)
                 {
-                    if (item != null)
+                    for (int j = 0; j < board.GetLength(1); j++)
                     {
-                        if (item is Prey)
-                            cell.FillColor = Color.Green;
-                        else if (item is Predator)
-                            cell.FillColor = Color.Red;
+                        v[0].Position = new Vector2f(SideSize * i + 1, SideSize * j + 1);
+                        v[1].Position = new Vector2f(SideSize * (i + 1) - 1, SideSize * j + 1);
+                        v[2].Position = new Vector2f(SideSize * (i + 1) - 1, SideSize * (j + 1) - 1);
+                        v[3].Position = new Vector2f(SideSize * i + 1, SideSize * (j + 1) - 1);
 
-                        cell.Position = item.Position;
-                        Draw(cell);
+                        if (board[i, j] != null)
+                        {
+                            if (board[i, j] is Prey)
+                            {
+                                v[0].Color = Color.Green;
+                                v[1].Color = Color.Green;
+                                v[2].Color = Color.Green;
+                                v[3].Color = Color.Green;
+                            }
+                            else if (board[i, j] is Predator)
+                            {
+                                v[0].Color = Color.Red;
+                                v[1].Color = Color.Red;
+                                v[2].Color = Color.Red;
+                                v[3].Color = Color.Red;
+                            }
+                            Draw(v, PrimitiveType.Quads, RenderStates.Default);
+                        }
                     }
                 }
-
+                
                 predatorsMeterText.DisplayedString = "Predators: " + predatorsMeter.ToString();
                 preysMeterText.DisplayedString = "Preys: " + preysMeter.ToString();
                 Draw(predatorsMeterText);
