@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 /**
     PREDATOR AND PREY CELLULAR AUTOMATON
     The world is grid of cells, with 3 possibilities: Predator(Red), Prey(Green), or Empty(Black).
@@ -33,20 +32,17 @@ namespace Predator_and_Prey
             Application PaP = new Application(new SFML.Window.VideoMode(1600, 900), "Predator and Prey")
             {
                 SideSize = 7,
-                PreyBreedHealth = 10,
-                PredatorBreedHealth = 100,
-                MaxHealth = 1000
+                PreyBreedHealth = 20,
+                PredatorBreedHealth = 70,
+                MaxHealthPredator = 1000,
+                MaxHealthPrey = 1000,
+                SimulationTickWaitTime = 40
             };
             PaP.Run();
         }
         static void Main(string[] args)
         {
-            Thread simulationWindow = new Thread(new ThreadStart(SimulationWindow));
-            simulationWindow.Start();
-            
-            // TODO settings in command prompt or winforms
-
-
+            SimulationWindow();
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using SFML.Graphics;
-using SFML.System;
+﻿using SFML.System;
 using System;
 
 namespace Predator_and_Prey
@@ -9,19 +8,19 @@ namespace Predator_and_Prey
     {
         public int Health { get; set; }
         public int MaxHealth { get; set; }
-        public float SideSize { get; private set; }
+        //public float SideSize { get; private set; }
         public Vector2f Position { get; set; }
 
         public Creature(float sideSize, int health,int maxHealth)
         {
             Health = health;
             MaxHealth = maxHealth;
-            SideSize = sideSize;
+            //SideSize = sideSize;
         }
-        public virtual void Update(Vector2i currentCoordinatesOnBoard)
+        public virtual void Update(Vector2i currentCoordinatesOnBoard,float sideSize)
         {
             Heal(0);
-            Position = (Vector2f)currentCoordinatesOnBoard * SideSize;
+            Position = (Vector2f)currentCoordinatesOnBoard * sideSize;
         }
         public void Heal(int amount)
         {
@@ -29,7 +28,7 @@ namespace Predator_and_Prey
             Health = Math.Max(Math.Min(Health, MaxHealth),0);
             
         }
-        public virtual void Reproduce(ref Creature[,] board, Vector2i currentCoordinatesOnBoard, ref Random rnd, int healthAmountToReproduce)
+        public virtual void Reproduce(ref Creature[,] board,float sideSize, Vector2i currentCoordinatesOnBoard, ref Random rnd, int healthAmountToReproduce)
         {
             //Simple creature doesnt reproduce
         }
