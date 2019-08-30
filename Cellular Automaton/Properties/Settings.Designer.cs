@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Predator_and_Prey.Properties
+namespace Cellular_Automaton.Properties
 {
 
 

@@ -1,6 +1,4 @@
-﻿using System.Threading;
-/**
-    PREDATOR AND PREY CELLULAR AUTOMATON
+PREDATOR AND PREY CELLULAR AUTOMATON
     The world is grid of cells, with 3 possibilities: Predator(Red), Prey(Green), or Empty(Black).
     Both predator and prey have a set health, that changes over time.
     The simulation works in steps, with the following rules:
@@ -22,27 +20,3 @@
             If the predator has enough energy it spawns offspring in a free neighboring cell.
             Predators lose a small fixed ammount of energy with every time step.
             A predator dies if its energy level drops to zero.
-*/
-namespace Predator_and_Prey
-{
-    class Program
-    {
-        public static void SimulationWindow()
-        {
-            Application PaP = new Application(new SFML.Window.VideoMode(1600, 900), "Predator and Prey")
-            {
-                SideSize = 7,
-                PreyBreedHealth = 20,
-                PredatorBreedHealth = 70,
-                MaxHealthPredator = 1000,
-                MaxHealthPrey = 1000,
-                SimulationTickWaitTime = 40
-            };
-            PaP.Run();
-        }
-        static void Main(string[] args)
-        {
-            SimulationWindow();
-        }
-    }
-}
