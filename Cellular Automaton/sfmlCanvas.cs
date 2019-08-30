@@ -1,43 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using SFML.Graphics;
-using SFML.Window;
 using SFML.System;
 
 namespace Cellular_Automaton
 {
+    public delegate void DrawEventHandler(RenderWindow window, Time elapsedTime);
     public partial class SfmlCanvas : UserControl
     {
-        private RenderWindow RendWind;
+        public RenderWindow RendWind;
+
+        public event DrawEventHandler OnDraw;
+
+        protected virtual void Draw(Time elapsedTime)
+        {
+            OnDraw?.Invoke(RendWind, elapsedTime);
+        }
         public SfmlCanvas()
         {
             InitializeComponent();
         }
 
-        public void StartSLMF()
+        private void SfmlCanvas_Load(object sender, EventArgs e)
         {
             if (!renderLoopWorker.IsBusy)
                 renderLoopWorker.RunWorkerAsync(Handle);
         }
 
-        private void SfmlCanvas_Load(object sender, EventArgs e)
-        {
-            StartSLMF();
-        }
-
         private void RenderLoopWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            ContextSettings contextSettings = new ContextSettings() { AntialiasingLevel = 8 };
-            RendWind = new RenderWindow((IntPtr)e.Argument, contextSettings);
-            RendWind.SetFramerateLimit(60);
-
-
+            //ContextSettings contextSettings = new ContextSettings() { AntialiasingLevel = 8 };
+            //RendWind.SetFramerateLimit(60);
+            RendWind = new RenderWindow((IntPtr)e.Argument);
             Clock clock = new Clock();
             while (RendWind.IsOpen)
             {
@@ -45,7 +40,7 @@ namespace Cellular_Automaton
                 clock.Restart();
                 RendWind.DispatchEvents();
                 RendWind.Clear(new Color(BackColor.R, BackColor.G, BackColor.B));
-
+                Draw(elapsed);
                 RendWind.Display();
             }
         }
@@ -61,5 +56,7 @@ namespace Cellular_Automaton
             if (RendWind == null)
                 base.OnPaintBackground(pevent);
         }
+
+
     }
 }
