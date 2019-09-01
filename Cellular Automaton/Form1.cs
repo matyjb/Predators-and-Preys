@@ -17,7 +17,7 @@ namespace Cellular_Automaton
             sfmlCanvas.OnDraw += SfmlCanvas_OnDraw;
         }
 
-        private void SfmlCanvas_OnDraw(RenderWindow window, Time elapsedTime)
+        private void SfmlCanvas_OnDraw(RenderWindow window)
         {
             CircleShape cs = new CircleShape(5) { FillColor = Color.Cyan };
             window.Draw(cs);

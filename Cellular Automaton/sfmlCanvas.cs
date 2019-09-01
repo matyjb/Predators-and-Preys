@@ -6,16 +6,28 @@ using SFML.System;
 
 namespace Cellular_Automaton
 {
-    public delegate void DrawEventHandler(RenderWindow window, Time elapsedTime);
+    public delegate void InitEventHandler(RenderWindow window);
+    public delegate void UpdateEventHandler(RenderWindow window, Time elapsedTime);
+    public delegate void DrawEventHandler(RenderWindow window);
     public partial class SfmlCanvas : UserControl
     {
         public RenderWindow RendWind;
 
+        public event InitEventHandler OnInit;
+        public event UpdateEventHandler OnUpdate;
         public event DrawEventHandler OnDraw;
 
-        protected virtual void Draw(Time elapsedTime)
+        protected virtual void Init()
         {
-            OnDraw?.Invoke(RendWind, elapsedTime);
+            OnInit?.Invoke(RendWind);
+        }
+        protected virtual void Update(Time elapsedTime)
+        {
+            OnUpdate?.Invoke(RendWind, elapsedTime);
+        }
+        protected virtual void Draw()
+        {
+            OnDraw?.Invoke(RendWind);
         }
         public SfmlCanvas()
         {
@@ -30,17 +42,17 @@ namespace Cellular_Automaton
 
         private void RenderLoopWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            //ContextSettings contextSettings = new ContextSettings() { AntialiasingLevel = 8 };
-            //RendWind.SetFramerateLimit(60);
             RendWind = new RenderWindow((IntPtr)e.Argument);
             Clock clock = new Clock();
+            Init();
             while (RendWind.IsOpen)
             {
                 Time elapsed = clock.ElapsedTime;
                 clock.Restart();
                 RendWind.DispatchEvents();
                 RendWind.Clear(new Color(BackColor.R, BackColor.G, BackColor.B));
-                Draw(elapsed);
+                Update(elapsed);
+                Draw();
                 RendWind.Display();
             }
         }
