@@ -33,11 +33,13 @@ namespace Cellular_Automaton
         {
             InitializeComponent();
         }
-
         private void SfmlCanvas_Load(object sender, EventArgs e)
         {
-            if (!renderLoopWorker.IsBusy)
-                renderLoopWorker.RunWorkerAsync(Handle);
+            if (!this.DesignMode)
+            {
+                if (!renderLoopWorker.IsBusy)
+                    renderLoopWorker.RunWorkerAsync(Handle);
+            }
         }
 
         private void RenderLoopWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -56,19 +58,15 @@ namespace Cellular_Automaton
                 RendWind.Display();
             }
         }
-
         protected override void OnPaint(PaintEventArgs e)
         {
             if (RendWind == null)
                 base.OnPaint(e);
         }
-
         protected override void OnPaintBackground(PaintEventArgs pevent)
         {
             if (RendWind == null)
                 base.OnPaintBackground(pevent);
         }
-
-
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace Cellular_Automaton
 {
-    abstract class Creature
+    public abstract class Creature
     {
         private int _health = 100;
         public int Health { get => _health; set { _health = Math.Min(Math.Max(value, MinHealth), MaxHealth); } }
@@ -11,6 +11,6 @@ namespace Cellular_Automaton
         public int MinHealth { get; protected set; } = 0;
         public Color Color { get; set; } = Color.White;
 
-        public virtual void OnUpdate(Creature[,] board, int posX, int posY) { }
+        public virtual void Update(Creature[,] board, int posX, int posY) { }
     }
 }
